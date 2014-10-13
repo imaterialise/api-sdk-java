@@ -17,19 +17,24 @@ import org.json.JSONObject;
 
 
 
-public class CartItemApi {
-
-	private static final String toolID_ = "[Tool ID here]";
-	private static final String apiCode_ = "[API CODE here]";
+public class CartItemApi 
+{	
+	private String toolID;
+	private String apiCode;
 	 
-	
+	public CartItemApi(String toolId, String apiCode)
+	{
+		this.toolID = toolId;
+		this.apiCode = apiCode;
+	}
+
 	private JSONObject getJson() throws JSONException {
 		JSONObject j = new JSONObject();
 		
 		JSONObject itemJson = new JSONObject();
 		itemJson.put("myCartItemReference", UUID.randomUUID().toString());
-		itemJson.put("toolID", toolID_);
-		itemJson.put("modelID", "36bc059c-5263-43df-83c9-898960abd9e8");
+		itemJson.put("toolID", this.toolID);
+		itemJson.put("modelID", "[Model ID HERE]");
 		itemJson.put("materialID", "035f4772-da8a-400b-8be4-2dd344b28ddb");
 		itemJson.put("finishID", "bba2bebb-8895-4049-aeb0-ab651cee2597");
 		itemJson.put("fileScaleFactor", 1);
@@ -53,11 +58,11 @@ public class CartItemApi {
 	}
 	
 	
-	private void postData() throws IOException, JSONException {
+	public void registerCartItem() throws IOException, JSONException {
 		JSONObject json = getJson();
 
 		HttpPost post = new HttpPost("https://imatsandbox.materialise.net/web-api/cartitems/register");
-		post.addHeader("ApiCode", apiCode_);
+		post.addHeader("ApiCode", this.apiCode);
 		post.addHeader("Accept", "text/json");
 		String boundaryId = UUID.randomUUID().toString();
 		post.addHeader("Content-Type", "multipart/form-data; boundary=" + boundaryId);
@@ -72,11 +77,4 @@ public class CartItemApi {
 		
 		System.out.println("response:" + IOUtils.toString(resp.getEntity().getContent()));
 	}
-	
-	
-	public static void main(String[] args) throws IOException, JSONException {
-		CartItemApi c = new CartItemApi();
-		c.postData();
-	}
-	
 }
