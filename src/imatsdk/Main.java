@@ -14,8 +14,13 @@ public class Main {
 		//CartItemApi c = new CartItemApi(toolID, apiCode);
 		//c.registerCartItem();
 		
-		UploadModelApi uploadModelApi = new UploadModelApi(toolID);
-		uploadModelApi.uploadModel("[FilePath here]", "mm");
+		//UploadModelApi uploadModelApi = new UploadModelApi(toolID);
+		//uploadModelApi.uploadModel("[FilePath here]", "mm");
 
+		///PricingByDimensionsApi c = new PricingByDimensionsApi(toolID, apiCode);
+		//c.calculatePrice();
+		
+		//PricingByModelApi c = new PricingByModelApi(toolID, apiCode, "[ModelId here]");
+		//c.calculatePrice();
 	}
 }
