@@ -21,21 +21,19 @@ public class PricingByModelApi {
 	
 	private String toolID;
 	private String apiCode;
-	private String modelId;
 	
-	public PricingByModelApi(String toolId, String apiCode, String modelId)
+	public PricingByModelApi(String toolId, String apiCode)
 	{
 		this.toolID = toolId;
 		this.apiCode = apiCode;
-		this.modelId = modelId;
 	}
 		
 	
-	private JSONObject getJson() throws JSONException {
+	private JSONObject getJson(String modelId) throws JSONException {
 		JSONObject j = new JSONObject();
 		
 		JSONObject itemJson = new JSONObject();
-		itemJson.put("modelID", this.modelId);
+		itemJson.put("modelID", modelId);
 		itemJson.put("materialID", "035f4772-da8a-400b-8be4-2dd344b28ddb");
 		itemJson.put("finishID", "bba2bebb-8895-4049-aeb0-ab651cee2597");
 		itemJson.put("quantity", 1);
@@ -57,13 +55,13 @@ public class PricingByModelApi {
 		return j;
 	}
 	
-	public void calculatePrice() throws IOException, JSONException {
+	public void calculatePrice(String modelId) throws IOException, JSONException {
 
 		HttpPost post = new HttpPost("https://imatsandbox.materialise.net/web-api/pricing/model");
 		post.addHeader("Accept", "application/json");
 		post.addHeader("Content-Type", "application/json");
 		post.addHeader("APICode", this.apiCode);
-		JSONObject json = getJson();
+		JSONObject json = getJson(modelId);
 		
 	
 		EntityBuilder builder = EntityBuilder.create();

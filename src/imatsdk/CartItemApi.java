@@ -28,13 +28,13 @@ public class CartItemApi
 		this.apiCode = apiCode;
 	}
 
-	private JSONObject getJson() throws JSONException {
+	private JSONObject getJson(String modelId) throws JSONException {
 		JSONObject j = new JSONObject();
 		
 		JSONObject itemJson = new JSONObject();
 		itemJson.put("myCartItemReference", UUID.randomUUID().toString());
 		itemJson.put("toolID", this.toolID);
-		itemJson.put("modelID", "[Model ID HERE]");
+		itemJson.put("modelID", modelId);
 		itemJson.put("materialID", "035f4772-da8a-400b-8be4-2dd344b28ddb");
 		itemJson.put("finishID", "bba2bebb-8895-4049-aeb0-ab651cee2597");
 		itemJson.put("fileScaleFactor", 1);
@@ -58,8 +58,8 @@ public class CartItemApi
 	}
 	
 	
-	public void registerCartItem() throws IOException, JSONException {
-		JSONObject json = getJson();
+	public void registerCartItem(String modelId) throws IOException, JSONException {
+		JSONObject json = getJson(modelId);
 
 		HttpPost post = new HttpPost("https://imatsandbox.materialise.net/web-api/cartitems/register");
 		post.addHeader("ApiCode", this.apiCode);
