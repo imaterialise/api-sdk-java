@@ -24,7 +24,9 @@ public class Main {
 		//pricingByModelApi.calculatePrice("[MODELID HERE]");
 		
 		//CartRegistrationApi cartRegistrationApi = new CartRegistrationApi(toolID, apiCode);
-		//cartRegistrationApi.registerCart("[CART ITEM ID HERE]");		
+		//cartRegistrationApi.registerCart("[CART ITEM ID HERE]");	
+		//cartRegistrationApi.addCartItemToCart("[CART ITEM ID HERE]", "[CART ID HERE]");
+		//cartRegistrationApi.removeCartItemFromCart("[CART ITEM ID HERE]", "[CART ID HERE]");		
 		
 		//CartOrderingApi cartOrderingApi = new CartOrderingApi(apiCode);
 		//cartOrderingApi.createOrder("[CART ID HERE]", ""[SHIPMENT SERVICE HERE]"", null, null);			

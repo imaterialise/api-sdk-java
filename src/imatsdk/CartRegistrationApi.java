@@ -9,12 +9,15 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.EntityBuilder;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import components.HttpDeleteWithBody;
 
 
 
@@ -29,7 +32,7 @@ public class CartRegistrationApi
 		this.apiCode = apiCode;
 	}
 
-	private JSONObject getJson(String cartId) throws JSONException {
+	private JSONObject getJson(String cartItemId) throws JSONException {
 		JSONObject cartJson = new JSONObject();
 		
 		cartJson.put("myCartReference", UUID.randomUUID().toString());
@@ -39,7 +42,7 @@ public class CartRegistrationApi
 		cartJson.put("failureUrl", "http://mysite.com/failure.html");
 		
 		JSONObject itemJson = new JSONObject();	
-		itemJson.put("cartItemID", cartId);
+		itemJson.put("cartItemID", cartItemId);
 		List<JSONObject> itemList = new ArrayList<>();
 		itemList.add(itemJson);
 		
@@ -77,13 +80,13 @@ public class CartRegistrationApi
 	}
 	
 	
-	public void registerCart(String cartId) throws IOException, JSONException {
+	public void registerCart(String cartItemId) throws IOException, JSONException {
 
 		HttpPost post = new HttpPost("https://imatsandbox.materialise.net/web-api/cart/post");
 		post.addHeader("Accept", "application/json");
 		post.addHeader("Content-Type", "application/json");
 		post.addHeader("APICode", this.apiCode);
-		JSONObject json = getJson(cartId);
+		JSONObject json = getJson(cartItemId);
 		
 	
 		EntityBuilder builder = EntityBuilder.create();
@@ -95,4 +98,51 @@ public class CartRegistrationApi
 		
 		System.out.println("response:" + IOUtils.toString(resp.getEntity().getContent()));
 	}
+	
+	
+	public void addCartItemToCart(String cartItemId, String cartId) throws IOException, JSONException {
+		JSONObject cartItemsJson = new JSONObject();
+		JSONObject itemJson = new JSONObject();
+		itemJson.put("CartItemID", cartItemId);
+		
+		List<JSONObject> itemList = new ArrayList<>();
+		itemList.add(itemJson);
+		cartItemsJson.put("cartItems", itemList);
+
+		HttpPost post = new HttpPost("https://imatsandbox.materialise.net/web-api/cart/" + cartId + "/items");
+		post.addHeader("Accept", "application/json");
+		post.addHeader("Content-Type", "application/json");
+		
+		EntityBuilder builder = EntityBuilder.create();
+		builder.setText(cartItemsJson.toString());
+		post.setEntity(builder.build());
+		
+		HttpClient hclient = new DefaultHttpClient();		
+		HttpResponse resp = hclient.execute(post);
+		
+		System.out.println("response:" + IOUtils.toString(resp.getEntity().getContent()));
+	}	
+	
+	public void removeCartItemFromCart(String cartItemId, String cartId) throws IOException, JSONException {
+		JSONObject cartItemsJson = new JSONObject();
+		JSONObject itemJson = new JSONObject();
+		itemJson.put("CartItemID", cartItemId);
+		
+		List<JSONObject> itemList = new ArrayList<>();
+		itemList.add(itemJson);
+		cartItemsJson.put("cartItems", itemList);
+
+		HttpDeleteWithBody httpDelete  = new HttpDeleteWithBody("https://imatsandbox.materialise.net/web-api/cart/" + cartId + "/items");
+		httpDelete.addHeader("Accept", "application/json");
+		httpDelete.addHeader("Content-Type", "application/json");
+		
+		EntityBuilder builder = EntityBuilder.create();
+		builder.setText(cartItemsJson.toString());
+		httpDelete.setEntity(builder.build());
+		
+		HttpClient hclient = new DefaultHttpClient();		
+		HttpResponse resp = hclient.execute(httpDelete);
+		
+		System.out.println("response:" + IOUtils.toString(resp.getEntity().getContent()));
+	}		
 }
